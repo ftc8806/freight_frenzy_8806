@@ -33,6 +33,25 @@ public class DriveProgramPlusArm extends OpMode {
         /**
          * Something to note with this implementation:
          * Rotation (with bumpers) takes priority over tank drive movement
+         *
+         * For Ryan:
+         *
+         * The issue with the code as it was originally was the lack of "if" statements seen below.
+         * The program would check for input one one part of the controller, and then set the motor speed
+         * accordingly. The issue being that the different "blocks" for each action ended up fighting each
+         * other -- the tank drive section would try to run the motor but the code for strafing would set
+         * the motor power back to 0. This back and forth is what caused the "jerky" motion you described.
+         *
+         * Segmenting the code into their own blocks like this ensures that the seperate actions *don't*
+         * fight against each other.
+         *
+         * Not everything needs to be segmented and grouped like this, only sections of code dealing with
+         * the same motors. For example, the tank drive and turning need to be in their own section, where
+         * the controls for the arm and sucker need to be in their own.
+         *
+         * I'm not very good at describing things but hopefully this helps a bit lol
+         *
+         * - Mike
          */
         if (gamepad1.left_bumper) {
             // in-place rotate left
