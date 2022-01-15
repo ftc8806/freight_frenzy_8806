@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.security.DomainCombiner;
-
+@Disabled
 @Autonomous(name = "Autonomous (do something?)")
 public class SimpleAuto extends LinearOpMode {
 
