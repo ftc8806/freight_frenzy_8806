@@ -9,7 +9,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class DriveProgramPlusArm extends OpMode {
 
     DcMotor fr, fl, br, bl, arm, angle;
-    double speed = 1;
+
+    // full-tilt ix a bit too fast
+    // the robot flies and slides all over the place
+    // feel free to try and dial this in more specifically, but .75 worked well enough for basic testing
+    double speed = 0.75;
     double halfspeed = .60;
 
     @Override
