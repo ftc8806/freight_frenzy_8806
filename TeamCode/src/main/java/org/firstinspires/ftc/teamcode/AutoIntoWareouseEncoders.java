@@ -21,9 +21,9 @@ public class AutoIntoWareouseEncoders extends LinearOpMode {
         br = hardwareMap.dcMotor.get("br");
         bl = hardwareMap.dcMotor.get("bl");
 
-        fr.setDirection(DcMotorSimple.Direction.REVERSE);
-        br.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        // these are reversed in hardware?
+//        fr.setDirection(DcMotorSimple.Direction.REVERSE);
+//        br.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addData("fl pos", fl.getCurrentPosition());
         telemetry.addData("fr pos", fr.getCurrentPosition());
@@ -35,13 +35,19 @@ public class AutoIntoWareouseEncoders extends LinearOpMode {
 
         setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
-        setEncoderTarget(-2000);
+        // set up motor mode and encoder target
         setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setEncoderTarget(-2000);
         setMotorPower(0.25);
-        while (opModeIsActive() && fr.isBusy()) { idle();
+
+        while (opModeIsActive() &&
+                (fr.isBusy() || fl.isBusy() || br.isBusy() || bl.isBusy()))
+        {
+            idle();
             telemetry.addData("MODE", "IDLE");
         }
+
+        // stop
         setMotorPower(0.0);
     }
 

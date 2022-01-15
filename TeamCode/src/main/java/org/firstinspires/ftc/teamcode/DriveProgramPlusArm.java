@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class DriveProgramPlusArm extends OpMode {
 
     DcMotor fr, fl, br, bl, arm, angle;
+    double speed = 1;
+    double halfspeed = .60;
 
     @Override
     public void init() {
@@ -23,78 +25,54 @@ public class DriveProgramPlusArm extends OpMode {
 
         arm = hardwareMap.dcMotor.get("arm");
         angle = hardwareMap.dcMotor.get("angle");
-
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
     public void loop() {
 
-        double speed1 = 1;
-        double speed2 = .5;
-        double speed3 = .5;
-        double halfspeed = .60;
+        /**
+         * Something to note with this implementation:
+         * Rotation (with bumpers) takes priority over tank drive movement
+         */
+        if (gamepad1.left_bumper) {
+            // in-place rotate left
+            fl.setPower(speed);
+            bl.setPower(speed);
+            fr.setPower(-speed);
+            br.setPower(-speed);
+        } else if (gamepad1.right_bumper) {
+            // in-place rotate right
+            fl.setPower(-speed);
+            bl.setPower(-speed);
+            fr.setPower(speed);
+            br.setPower(speed);
+        } else if (gamepad1.left_stick_y != 0 || gamepad1.right_stick_y != 0) {
+            // tank drive
+            fl.setPower(gamepad1.left_stick_y * speed);
+            bl.setPower(gamepad1.left_stick_y * speed);
+            br.setPower(gamepad1.right_stick_y * speed);
+            fr.setPower(gamepad1.right_stick_y * speed);
+        } else {
+            fl.setPower(0);
+            bl.setPower(0);
+            fr.setPower(0);
+            br.setPower(0);
+        }
 
-
-
-        /**Left Stick**/
-        fl.setPower(gamepad1.left_stick_y * speed2);
-        bl.setPower(gamepad1.left_stick_y * speed2);
-
-        /**Right Stick**/
-        br.setPower(gamepad1.right_stick_y * speed3);
-        fr.setPower(gamepad1.right_stick_y * speed2);
-
-        /**Triggers**/
-        fl.setPower(gamepad1.left_trigger * speed2);
-        bl.setPower(gamepad1.left_trigger * speed2);
-        br.setPower(gamepad1.left_trigger * speed3);
-        fr.setPower(gamepad1.left_trigger * speed2);
-
-        fl.setPower(gamepad1.right_trigger * -speed2);
-        bl.setPower(gamepad1.right_trigger * -speed2);
-        br.setPower(gamepad1.right_trigger * -speed3);
-        fr.setPower(gamepad1.right_trigger * -speed2);
-
-
-
-//        /**Bumpers**/
-//        if (gamepad1.right_bumper) {
-//            // right
-//            fl.setPower(speed2);
-//            bl.setPower(speed2);
-//            fr.setPower(speed2);
-//            br.setPower(speed2);
+        // wacky spinning wheel
+//        if (gamepad1.b) {
 //
-//        } else if (gamepad1.left_bumper) {
-//            // left
-//            fl.setPower(speed2);
-//            bl.setPower(-speed2);
-//            fr.setPower(-speed2);
-//            br.setPower(speed2);
+//        } else if (gamepad1.x) {
+//
 //        }
 
         /**Arm**/
-
-        arm.setPower(gamepad2.left_stick_y * speed1);
+        arm.setPower(gamepad2.left_stick_y * speed);
         angle.setPower(gamepad2.right_stick_y * halfspeed);
 
         /**DATA**/
         telemetry.addData("left stick y", gamepad1.left_stick_y);
         telemetry.addData("right stick y", gamepad1.right_stick_y);
-
-        telemetry.addData("fl pos", fl.getCurrentPosition());
-        telemetry.addData("fr pos", fr.getCurrentPosition());
-        telemetry.addData("bl pos", bl.getCurrentPosition());
-        telemetry.addData("br pos", br.getCurrentPosition());
-
-    }
-    void setMotorMode(DcMotor.RunMode mode) {
-        fr.setMode(mode);
-        fl.setMode(mode);
-        br.setMode(mode);
-        bl.setMode(mode);
     }
 }
 
